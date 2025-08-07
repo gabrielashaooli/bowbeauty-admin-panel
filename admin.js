@@ -6,30 +6,34 @@ import mongoose from 'mongoose';
 import AdminJS from 'adminjs';
 import AdminJSExpress from '@adminjs/express';
 import * as AdminJSMongoose from '@adminjs/mongoose';
-
+import { ComponentLoader } from 'adminjs'; 
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import Usuario from './models/Usuario.js';
 import ReelPost from './models/ReelPost.js';
 
-AdminJS.registerAdapter(AdminJSMongoose);
-// Conectar a MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('Conectado a MongoDB');
-}).catch((err) => {
-  console.error('Error al conectar a MongoDB:', err);
-});
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-// Configuración de AdminJS
+const componentLoader = new ComponentLoader();
+const MediaPreview = componentLoader.add('MediaPreview', path.join(__dirname, 'components/MediaPreview.jsx'));
+
+AdminJS.registerAdapter(AdminJSMongoose);
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('Conectado a MongoDB'))
+  .catch((err) => console.error('Error al conectar:', err));
+
 const adminJs = new AdminJS({
   rootPath: '/admin',
+  componentLoader,
   resources: [
     {
       resource: Usuario,
       options: {
         properties: {
-          Password: { isVisible: false }, // Ocultamos el campo en la UI
+          Password: { isVisible: false },
         },
       },
     },
@@ -38,16 +42,9 @@ const adminJs = new AdminJS({
       options: {
         properties: {
           MediaUrl: {
-            type: 'string',
-            isVisible: {
-              list: true,
-              filter: true,
-              show: true,
-              edit: true,
-            },
             components: {
-              //list: AdminJS.bundle('./components/MediaPreview.js'), 
-              // show: AdminJS.bundle('./components/MediaPreview.js'), 
+              show: MediaPreview,
+              list: MediaPreview,
             },
           },
         },
@@ -60,7 +57,6 @@ const adminJs = new AdminJS({
   },
 });
 
-// Login básico
 const adminRouter = AdminJSExpress.buildAuthenticatedRouter(adminJs, {
   authenticate: async (email, password) => {
     if (
@@ -79,6 +75,5 @@ app.use(adminJs.options.rootPath, adminRouter);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`Panel corriendo en http://localhost:${PORT}/admin`);
-
+  console.log(`Panel corriendo en http://localhost:${PORT}/admin`);
 });

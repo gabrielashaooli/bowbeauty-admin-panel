@@ -2,6 +2,7 @@
   "name": "bowbeauty-admin-panel",
   "version": "1.0.0",
   "main": "admin.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
