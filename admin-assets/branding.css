@@ -1,0 +1,235 @@
+/* === Variables CSS para Bow Beauty === */
+:root {
+  --primary: #4C1E1E;
+  --primary-light: #6A2A2A;
+  --accent: #E4BB8D;
+  --white: #FAEBDD;
+  --grey-light: #F6F7FB;
+  --shadow: 0 20px 60px -12px rgba(76,30,30,.15);
+  --shadow-hover: 0 25px 80px -12px rgba(76,30,30,.25);
+}
+
+/* === Login de Pantalla Completa === */
+/* Forzar pantalla completa en el contenedor principal del login */
+:root body *:has(> form[action="/admin/login"]) {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--accent) 100%) !important;
+  overflow: hidden !important;
+}
+
+/* Ocultar elementos innecesarios */
+:root body *:has(> form[action="/admin/login"]) > :not(form) {
+  display: none !important;
+}
+
+/* === Estilo del Formulario === */
+form[action="/admin/login"] {
+  width: 100% !important;
+  max-width: 450px !important;
+  background: var(--white) !important;
+  border: none !important;
+  border-radius: 24px !important;
+  padding: 48px 40px !important;
+  box-shadow: var(--shadow) !important;
+  position: relative !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+form[action="/admin/login"]:hover {
+  box-shadow: var(--shadow-hover) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* === Logo y Título === */
+form[action="/admin/login"]::before {
+  content: '' !important;
+  display: block !important;
+  width: 80px !important;
+  height: 80px !important;
+  margin: 0 auto 24px !important;
+  background: url('http://localhost:3001/logo/bow_icono_Mesa de trabajo 1 copia.png') center/contain no-repeat !important;
+  border-radius: 50% !important;
+  padding: 12px !important;
+  box-sizing: border-box !important;
+}
+
+/* Título personalizado */
+form[action="/admin/login"] h1,
+form[action="/admin/login"] .login-title {
+  font-family: 'Playfair Display', serif !important;
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  color: var(--primary) !important;
+  text-align: center !important;
+  margin: 0 0 8px 0 !important;
+}
+
+/* Subtítulo */
+form[action="/admin/login"] p,
+form[action="/admin/login"] .login-subtitle {
+  text-align: center !important;
+  color: var(--primary-light) !important;
+  font-size: 16px !important;
+  margin: 0 0 32px 0 !important;
+  font-weight: 400 !important;
+}
+
+/* Si no hay subtítulo, agregamos uno */
+form[action="/admin/login"] h1 + * {
+  position: relative !important;
+}
+
+form[action="/admin/login"] h1 + *::before {
+  content: 'Accede a tu panel de administración' !important;
+  display: block !important;
+  text-align: center !important;
+  color: var(--primary-light) !important;
+  font-size: 16px !important;
+  margin-bottom: 32px !important;
+  font-weight: 400 !important;
+}
+
+/* === Campos de Input === */
+form[action="/admin/login"] .form-group,
+form[action="/admin/login"] div {
+  margin-bottom: 24px !important;
+}
+
+form[action="/admin/login"] label {
+  display: block !important;
+  color: var(--primary) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  margin-bottom: 8px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+form[action="/admin/login"] input {
+  width: 100% !important;
+  height: 52px !important;
+  border: 2px solid var(--accent) !important;
+  border-radius: 12px !important;
+  padding: 0 16px !important;
+  font-size: 16px !important;
+  background: rgba(250, 235, 221, 0.5) !important;
+  color: var(--primary) !important;
+  transition: all 0.3s ease !important;
+  box-sizing: border-box !important;
+}
+
+form[action="/admin/login"] input:focus {
+  outline: none !important;
+  border-color: var(--accent) !important;
+  background: var(--white) !important;
+  box-shadow: 0 0 0 3px rgba(228, 187, 141, 0.1) !important;
+  transform: translateY(-1px) !important;
+}
+
+form[action="/admin/login"] input::placeholder {
+  color: rgba(76, 30, 30, 0.5) !important;
+}
+
+/* === Botón de Submit === */
+form[action="/admin/login"] button {
+  width: 100% !important;
+  height: 52px !important;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%) !important;
+  color: var(--white) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  margin-top: 16px !important;
+}
+
+form[action="/admin/login"] button:hover {
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent) 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(76, 30, 30, 0.3) !important;
+}
+
+form[action="/admin/login"] button:active {
+  transform: translateY(0) !important;
+}
+
+/* === Efectos adicionales === */
+/* Partículas de fondo */
+:root body *:has(> form[action="/admin/login"])::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(228, 187, 141, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(222, 216, 247, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(250, 235, 221, 0.05) 0%, transparent 50%) !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  form[action="/admin/login"] {
+    max-width: 95% !important;
+    padding: 32px 24px !important;
+  }
+  
+  form[action="/admin/login"]::after {
+    font-size: 28px !important;
+  }
+}
+
+/* === Mejoras para el Dashboard === */
+.bb-card {
+  background: #fff !important;
+  border: 1px solid var(--primary) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  box-shadow: 0 4px 20px rgba(76,30,30,.08) !important;
+  transition: all 0.3s ease !important;
+}
+
+.bb-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 30px rgba(76,30,30,.12) !important;
+}
+
+/* === Animaciones === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+form[action="/admin/login"] {
+  animation: fadeInUp 0.6s ease-out !important;
+}
+
+form[action="/admin/login"] input,
+form[action="/admin/login"] button {
+  animation: fadeInUp 0.6s ease-out 0.2s both !important;
+}

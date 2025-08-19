@@ -1,31 +1,22 @@
 import React from 'react';
-
 const MediaPreview = ({ record }) => {
-  if (!record?.params) return <p>No hay datos</p>;
+  const p = record?.params || {};
+  if (!p.MediaUrl) return <p>No hay media</p>;
 
-  const { MediaUrl, TipoArchivo, Titulo } = record.params;
-  
-  if (!MediaUrl) return <p>No hay media</p>;
-
+  const isImage = (p.TipoArchivo || '').toLowerCase() === 'imagen';
   return (
-    <div style={{ maxWidth: '300px' }}>
-      <div style={{ fontSize: '12px', marginBottom: '5px', color: '#666' }}>
-        {Titulo} - {TipoArchivo}
+    <div style={{ maxWidth: 320 }}>
+      <div style={{ fontSize: 12, marginBottom: 6, color: '#666' }}>
+        {(p.Titulo || 'Sin título')} • {(p.TipoArchivo || '').toUpperCase()}
       </div>
-      
-      {TipoArchivo === 'imagen' ? (
-        <img 
-          src={MediaUrl} 
-          alt={Titulo} 
-          style={{ width: '100%', maxHeight: '200px', objectFit: 'cover' }}
-        />
+      {isImage ? (
+        <img src={p.MediaUrl} alt={p.Titulo || 'media'} style={{ width: '100%', maxHeight: 220, objectFit: 'cover', borderRadius: 8 }} />
       ) : (
-        <video controls style={{ width: '100%', maxHeight: '200px' }}>
-          <source src={MediaUrl} type="video/mp4" />
+        <video controls style={{ width: '100%', maxHeight: 220, borderRadius: 8 }}>
+          <source src={p.MediaUrl} type="video/mp4" />
         </video>
       )}
     </div>
   );
 };
-
 export default MediaPreview;

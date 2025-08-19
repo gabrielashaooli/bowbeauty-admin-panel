@@ -6,12 +6,10 @@ const ReelPostSchema = new mongoose.Schema({
   Descripcion: { type: String, required: true },
   MediaUrl: { type: String, required: true },
   TipoArchivo: { type: String, enum: ['video', 'imagen'], required: true },
-  CreatedAt: { type: Date, default: Date.now },
-  UpdatedAt: { type: Date, default: Date.now },
-  Likes: { type: Number, default: 0 }
+  Likes: { type: Number, default: 0 },
 }, {
-  collection: 'Reels'
+  collection: 'Reels',
+  timestamps: true, 
 });
 
-const ReelPost = mongoose.model('ReelPost', ReelPostSchema, 'Reels'); 
-export default ReelPost;
+export default mongoose.model('ReelPost', ReelPostSchema, 'Reels');
