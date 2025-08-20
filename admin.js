@@ -171,5 +171,5 @@ app.use(adminJs.options.rootPath, router);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Panel corriendo en http://localhost:${PORT}/admin`);
+  console.log(`🚀 Bow Beauty Admin Panel running at http://localhost:${PORT}/admin`);
 });
