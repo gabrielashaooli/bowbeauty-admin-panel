@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Admin - Bow Beauty</title>
+    <link rel="icon" href="/logo/bow_icono_Mesa de trabajo 1 copia.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: linear-gradient(135deg, #FAEBDD 0%, #E4B1B1 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: #FAEBDD;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(76, 30, 30, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            border: 2px solid #E4BB8D;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-container img {
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .logo-container h1 {
+            color: #4C1E1E;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .logo-container p {
+            color: #6A2A2A;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #4C1E1E;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #E4BB8D;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #FAEBDD;
+            color: #4C1E1E;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #6A2A2A;
+            box-shadow: 0 0 0 3px rgba(106, 42, 42, 0.1);
+        }
+
+        .register-btn {
+            width: 100%;
+            background: #4C1E1E;
+            color: #FAEBDD;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .register-btn:hover {
+            background: #6A2A2A;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(76, 30, 30, 0.3);
+        }
+
+        .register-btn:disabled {
+            background: #898A9A;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .login-link a {
+            color: #6A2A2A;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #4C1E1E;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #AEE5C8;
+            color: #3F8E67;
+            border: 1px solid #6BBF8F;
+        }
+
+        .alert-error {
+            background: #FFA5B5;
+            color: #C82E49;
+            border: 1px solid #DE405D;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #FAEBDD;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="logo-container">
+            <img src="/logo/bow_logo_Mesa de trabajo 1 copia.png" alt="Bow Beauty Logo">
+            <h1>Registro Admin</h1>
+            <p>Crear nueva cuenta de administrador</p>
+        </div>
+
+        <div id="alert-container"></div>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="name">Nombre Completo</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" required minlength="6">
+            </div>
+
+            <div class="form-group">
+                <label for="role">Rol</label>
+                <select id="role" name="role" required>
+                    <option value="">Seleccionar rol...</option>
+                    <option value="admin">Admin</option>
+                    <option value="super_admin">Super Admin</option>
+                </select>
+            </div>
+
+            <button type="submit" class="register-btn" id="registerBtn">
+                Crear Cuenta
+            </button>
+        </form>
+
+        <div class="login-link">
+            <a href="/admin">¿Ya tienes cuenta? Iniciar Sesión</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('registerBtn');
+            const alertContainer = document.getElementById('alert-container');
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                role: formData.get('role')
+            };
+
+            // Show loading state
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span>Creando cuenta...';
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    showAlert('¡Cuenta creada exitosamente! Redirigiendo...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/admin';
+                    }, 2000);
+                } else {
+                    showAlert(result.message || 'Error al crear la cuenta', 'error');
+                }
+            } catch (error) {
+                showAlert('Error de conexión. Intenta nuevamente.', 'error');
+                console.error('Register error:', error);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Crear Cuenta';
+            }
+        });
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+            
+            alertContainer.innerHTML = `
+                <div class="alert ${alertClass}">
+                    ${message}
+                </div>
+            `;
+
+            // Auto-hide error alerts after 5 seconds
+            if (type === 'error') {
+                setTimeout(() => {
+                    alertContainer.innerHTML = '';
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>
