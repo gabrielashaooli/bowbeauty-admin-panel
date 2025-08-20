@@ -17,6 +17,8 @@ import ReelPost from './models/ReelPost.js';
 import ReelComment from './models/ReelComment.js';
 import ReelLike from './models/ReelLike.js';
 import PasswordResetCode from './models/PasswordResetCode.js';
+import AdminUser from './models/AdminUser.js';
+import apiRoutes from './routes/api.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -263,18 +265,32 @@ const router = AdminJSExpress.buildAuthenticatedRouter(adminJs, {
     if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
       return { email, role: 'admin' };
     }
-    return null;
   },
   cookiePassword: process.env.COOKIE_SECRET,
 });
 
 app.use(adminJs.options.rootPath, router);
 
+// Middleware for API routes
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// API Routes (separate from AdminJS)
+app.use('/api', apiRoutes);
+
+// Serve registration page
+app.get('/register', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
+
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(` Panel de administración ejecutándose en:`);
   console.log(` Local: http://localhost:${PORT}/admin`);
   console.log(` Credenciales: ${process.env.ADMIN_EMAIL}`);
+  console.log(` Bow Beauty Admin Panel running at http://localhost:${PORT}/admin`);
 });
 
 export default adminJs;
