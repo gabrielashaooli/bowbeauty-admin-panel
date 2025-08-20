@@ -13,6 +13,8 @@ import { fileURLToPath } from 'url';
 
 import Usuario from './models/Usuario.js';
 import ReelPost from './models/ReelPost.js';
+import AdminUser from './models/AdminUser.js';
+import apiRoutes from './routes/api.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -157,19 +159,53 @@ app.use('/logo', express.static(path.join(__dirname, 'logo')));
 app.use('/admin-assets', express.static(path.join(__dirname, 'admin-assets')));
 
 
-// Auth sencilla
+// Auth con MongoDB
 const router = AdminJSExpress.buildAuthenticatedRouter(adminJs, {
   authenticate: async (email, password) => {
-    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-      return { email };
+    try {
+      // Find active admin user by email
+      const user = await AdminUser.findOne({ email, isActive: true });
+      if (!user) {
+        return null;
+      }
+
+      // Verify password using bcrypt
+      const isMatch = await user.comparePassword(password);
+      if (!isMatch) {
+        return null;
+      }
+
+      // Return user data for session
+      return { 
+        email: user.email, 
+        name: user.name, 
+        role: user.role,
+        id: user._id 
+      };
+    } catch (error) {
+      console.error('AdminJS authentication error:', error);
+      return null;
     }
-    return null;
   },
   cookiePassword: process.env.COOKIE_SECRET,
 });
 app.use(adminJs.options.rootPath, router);
 
+// Middleware for API routes
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// API Routes (separate from AdminJS)
+app.use('/api', apiRoutes);
+
+// Serve registration page
+app.get('/register', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
+
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Panel corriendo en http://localhost:${PORT}/admin`);
+  console.log(`🚀 Bow Beauty Admin Panel running at http://localhost:${PORT}/admin`);
 });
