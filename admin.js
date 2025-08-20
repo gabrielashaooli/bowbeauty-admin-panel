@@ -11,16 +11,20 @@ import { ComponentLoader } from 'adminjs';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
+// Modelos
 import Usuario from './models/Usuario.js';
 import ReelPost from './models/ReelPost.js';
+import ReelComment from './models/ReelComment.js';
+import ReelLike from './models/ReelLike.js';
+import PasswordResetCode from './models/PasswordResetCode.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// --- AdminJS base ---
+// AdminJS setup
 AdminJS.registerAdapter(AdminJSMongoose);
 
-// Conexión Mongo
+// Conexión MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('Conectado a MongoDB'))
   .catch((err) => console.error('Error al conectar:', err));
@@ -30,146 +34,247 @@ const componentLoader = new ComponentLoader();
 const MediaPreview = componentLoader.add('MediaPreview', path.join(__dirname, 'components/MediaPreview.jsx'));
 const WelcomeDashboard = componentLoader.add('WelcomeDashboard', path.join(__dirname, 'components/WelcomeDashboard.jsx'));
 
-// --- Configuración de recursos ---
+// --- RECURSOS DEL ADMIN ---
+
 const usuarioResource = {
   resource: Usuario,
   options: {
-    navigation: { name: 'Core', icon: 'User' },
+    navigation: { name: 'Usuarios', icon: 'User' },
     properties: {
       _id: { isTitle: true, position: 1 },
-      AppleId: { position: 2 },
+      Name: { position: 2 },
       Email: { position: 3 },
-      Name: { position: 4 },
-      Password: {
-        isVisible: { list: false, filter: false, show: false, edit: false }, // oculto
+      AppleId: { position: 4, isVisible: { list: false, show: true, edit: false } },
+      Password: { isVisible: false }, // Completamente oculto
+      createdAt: { 
+        position: 5, 
+        isVisible: { list: true, filter: true, show: true, edit: false },
+        type: 'datetime'
       },
-      createdAt: { isVisible: { list: true, filter: true, show: true, edit: false } },
-      updatedAt: { isVisible: { list: false, filter: true, show: true, edit: false } },
+      updatedAt: { isVisible: { list: false, show: true, edit: false } },
     },
     sort: { sortBy: 'createdAt', direction: 'desc' },
     listProperties: ['_id', 'Name', 'Email', 'createdAt'],
     showProperties: ['_id', 'Name', 'Email', 'AppleId', 'createdAt', 'updatedAt'],
-    filterProperties: ['_id', 'Name', 'Email', 'createdAt'],
+    filterProperties: ['Name', 'Email', 'createdAt'],
+    actions: {
+      delete: {
+        before: async (request) => {
+          // Opcional: Lógica antes de eliminar usuario
+          return request;
+        }
+      }
+    }
   },
 };
 
 const reelResource = {
   resource: ReelPost,
   options: {
-    navigation: { name: 'Core', icon: 'Video' },
+    navigation: { name: 'Contenido', icon: 'Video' },
     properties: {
-      // Mostrar el nombre del usuario en lugar del id
-      IdUsuario: {
-        position: 1,
-        isVisible: { list: true, filter: true, show: true, edit: true },
-        components: {},
-      },
-      Titulo: { position: 2, isTitle: true },
-      Descripcion: { type: 'textarea', position: 3 },
-      TipoArchivo: { position: 4, availableValues: [
-        { value: 'video', label: 'Video' },
-        { value: 'imagen', label: 'Imagen' },
+      idUsuario:  { label: 'Id Usuario', position: 1 },
+      titulo:     { label: 'Titulo', isTitle: true, position: 2 },
+      descripcion:{ label: 'Descripcion', type: 'textarea', position: 3 },
+      tipoArchivo:{ label: 'Tipo Archivo', position: 4, availableValues: [
+        { value: 'video', label: 'Video' }, { value: 'imagen', label: 'Imagen' }
       ]},
-      MediaUrl: {
-        position: 5,
-        components: { list: MediaPreview, show: MediaPreview },
-      },
-      Likes: { position: 6 },
-      createdAt: { isVisible: { list: true, filter: true, show: true, edit: false } },
-      updatedAt: { isVisible: { list: false, filter: true, show: true, edit: false } },
+      mediaUrl:   { label: 'Media', position: 5, components: { list: MediaPreview, show: MediaPreview } },
+      likes:      { label: 'Likes', position: 6 },
+      createdAt:  { label: 'Created At', position: 7, isVisible: { list:true, filter:true, show:true, edit:false } },
+      updatedAt:  { label: 'Updated At', isVisible: { list:false, filter:true, show:true, edit:false } },
     },
+    listProperties: ['mediaUrl','titulo','tipoArchivo','idUsuario','likes','createdAt'],
+    showProperties: ['mediaUrl','titulo','descripcion','tipoArchivo','idUsuario','likes','createdAt','updatedAt'],
+    filterProperties: ['titulo','tipoArchivo','idUsuario','createdAt'],
     sort: { sortBy: 'createdAt', direction: 'desc' },
-    listProperties: ['MediaUrl', 'Titulo', 'TipoArchivo', 'IdUsuario', 'Likes', 'createdAt'],
-    showProperties: ['MediaUrl', 'Titulo', 'Descripcion', 'TipoArchivo', 'IdUsuario', 'Likes', 'createdAt', 'updatedAt'],
-    filterProperties: ['Titulo', 'TipoArchivo', 'IdUsuario', 'createdAt'],
-    actions: {
-      // Evitar ediciones accidentales en createdAt/updatedAt
-      new: { before: async (req) => req },
-      edit: { before: async (req) => req },
-    },
   },
 };
 
-// --- AdminJS instancia ---
+const comentarioResource = {
+  resource: ReelComment,
+  options: {
+    navigation: { name: 'Moderación', icon: 'MessageSquare' },
+    properties: {
+      reelId:     { label: 'Id Reel', position: 1 },
+      idUsuario:  { label: 'Id Usuario', position: 2 },
+      contenido:  { label: 'Comentario', position: 3, type: 'textarea' },
+      isActive:   { label: 'Activo', position: 4, availableValues: [
+        { value: true, label: 'Activo' }, { value: false, label: 'Inactivo' }
+      ]},
+      createdAt:  { label: 'Created At', position: 5, isVisible: { list:true, filter:true, show:true, edit:false } },
+    },
+    listProperties: ['contenido','idUsuario','isActive','createdAt'],
+    filterProperties: ['reelId','idUsuario','isActive','createdAt'],
+    sort: { sortBy: 'createdAt', direction: 'desc' },
+  },
+};
+
+
+const likeResource = {
+  resource: ReelLike,
+  options: {
+    navigation: { name: 'Interacciones', icon: 'Heart' },
+    properties: {
+      _id: { position: 1, isTitle: true },
+      IdReel: { position: 2 },
+      IdUsuario: { position: 3 },
+      createdAt: { 
+        position: 4,
+        isVisible: { list: true, filter: true, show: true, edit: false }
+      },
+    },
+    sort: { sortBy: 'createdAt', direction: 'desc' },
+    listProperties: ['IdReel', 'IdUsuario', 'createdAt'],
+    filterProperties: ['IdReel', 'IdUsuario', 'createdAt'],
+    actions: {
+      new: { isVisible: false }, // No crear likes desde admin
+    }
+  },
+};
+
+const passwordResetResource = {
+  resource: PasswordResetCode,
+  options: {
+    navigation: { name: 'Seguridad', icon: 'Lock' },
+    properties: {
+      _id: { position: 1, isTitle: true },
+      Email: { position: 2 },
+      Code: { position: 3 },
+      IsUsed: { 
+        position: 4,
+        availableValues: [
+          { value: true, label: 'Usado' },
+          { value: false, label: 'Pendiente' },
+        ]
+      },
+      ExpiresAt: { position: 5, type: 'datetime' },
+      createdAt: { 
+        position: 6,
+        isVisible: { list: true, filter: true, show: true, edit: false }
+      },
+    },
+    sort: { sortBy: 'createdAt', direction: 'desc' },
+    listProperties: ['Email', 'IsUsed', 'ExpiresAt', 'createdAt'],
+    filterProperties: ['Email', 'IsUsed', 'createdAt'],
+    actions: {
+      new: { isVisible: false }, // No crear códigos desde admin
+      edit: { isVisible: false }, // No editar códigos
+    }
+  },
+};
+
+// --- CONFIGURACIÓN ADMINJS ---
 const adminJs = new AdminJS({
   componentLoader,
   rootPath: '/admin',
   dashboard: {
     component: WelcomeDashboard,
     handler: async (req, res, context) => {
-      const [usuarios, reels] = await Promise.all([
-        Usuario.countDocuments({}),
-        ReelPost.countDocuments({}),
-      ]);
+      try {
+        // Estadísticas principales
+        const [usuarios, reels, comentarios, likes, codigosReset] = await Promise.all([
+          Usuario.countDocuments({}),
+          ReelPost.countDocuments({}),
+          ReelComment.countDocuments({}),
+          ReelLike.countDocuments({}),
+          PasswordResetCode.countDocuments({ IsUsed: false }),
+        ]);
 
-      const ultimosReels = await ReelPost
-        .find({}, { Titulo: 1, TipoArchivo: 1, createdAt: 1 })
-        .sort({ createdAt: -1 })
-        .limit(5)
-        .lean();
+        // Actividad reciente
+        const [ultimosReels, ultimosUsuarios, ultimosComentarios] = await Promise.all([
+          ReelPost.find({}, { Titulo: 1, TipoArchivo: 1, Likes: 1, createdAt: 1 })
+            .sort({ createdAt: -1 }).limit(5).lean(),
+          Usuario.find({}, { Name: 1, Email: 1, createdAt: 1 })
+            .sort({ createdAt: -1 }).limit(5).lean(),
+          ReelComment.find({}, { Comentario: 1, IdUsuario: 1, IsActive: 1, createdAt: 1 })
+            .sort({ createdAt: -1 }).limit(5).lean(),
+        ]);
 
-      const ultimosUsuarios = await Usuario
-        .find({}, { _id: 1, Name: 1, Email: 1, createdAt: 1 })
-        .sort({ createdAt: -1 })
-        .limit(5)
-        .lean();
+        // Estadísticas adicionales
+        const reelsHoy = await ReelPost.countDocuments({
+          createdAt: { $gte: new Date(new Date().setHours(0, 0, 0, 0)) }
+        });
 
-      return {
-        counts: { usuarios, reels },
-        latest: { reels: ultimosReels, usuarios: ultimosUsuarios },
-      };
+        const usuariosHoy = await Usuario.countDocuments({
+          createdAt: { $gte: new Date(new Date().setHours(0, 0, 0, 0)) }
+        });
+
+        return {
+          counts: { 
+            usuarios, 
+            reels, 
+            comentarios, 
+            likes, 
+            codigosReset,
+            reelsHoy,
+            usuariosHoy
+          },
+          latest: { 
+            reels: ultimosReels, 
+            usuarios: ultimosUsuarios,
+            comentarios: ultimosComentarios
+          },
+        };
+      } catch (error) {
+        console.error('Error en dashboard handler:', error);
+        return {
+          counts: { usuarios: 0, reels: 0, comentarios: 0, likes: 0, codigosReset: 0 },
+          latest: { reels: [], usuarios: [], comentarios: [] },
+        };
+      }
     },
   },
-assets: { styles: ['/admin-assets/branding.css?v=9'] },
+  
+  assets: { styles: ['/admin-assets/branding.css?v=11'] },
 
   branding: {
-    companyName: 'Bow Beauty',
+    companyName: 'Bow Beauty Admin',
     withMadeWithLove: false,
     logo: 'http://localhost:3001/logo/bow_logo_Mesa de trabajo 1 copia.png',
     favicon: 'http://localhost:3001/logo/bow_icono_Mesa de trabajo 1 copia.png',
+    
     theme: {
-      colors: {
-        primary100: '#4C1E1E', primary80: '#6A2A2A', primary60: '#8E3B3B', primary40: '#B86262', primary20: '#E4B1B1',
-        accent: '#E4BB8D',
-        info: '#DED8F7',
-        love: '#FBC8D9',
-        white: '#FAEBDD',
-        grey100: '#1C1C38',
-        grey80: '#454655',
-        grey60: '#898A9A',
-        grey40: '#C0C0CA',
-        grey20: '#F6F7FB',
-        error: '#DE405D', errorLight: '#FFA5B5', errorDark: '#C82E49',
-        success: '#6BBF8F', successLight: '#AEE5C8', successDark: '#3F8E67',
-        warning: '#E4BB8D',
+      fonts: { 
+        base: "'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" 
       },
-      fonts: { base: "'Inter', Arial, sans-serif" },
     },
   },
-  resources: [usuarioResource, reelResource],
+  
+  resources: [
+    usuarioResource, 
+    reelResource, 
+    comentarioResource, 
+    likeResource, 
+    passwordResetResource
+  ],
 });
 
-// --- App Express ---
+// --- EXPRESS APP ---
 const app = express();
 
-// Archivos estáticos (logos + css)
+// Archivos estáticos
 app.use('/logo', express.static(path.join(__dirname, 'logo')));
 app.use('/admin-assets', express.static(path.join(__dirname, 'admin-assets')));
 
-
-// Auth sencilla
+// Autenticación
 const router = AdminJSExpress.buildAuthenticatedRouter(adminJs, {
   authenticate: async (email, password) => {
     if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-      return { email };
+      return { email, role: 'admin' };
     }
     return null;
   },
   cookiePassword: process.env.COOKIE_SECRET,
 });
+
 app.use(adminJs.options.rootPath, router);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Panel corriendo en http://localhost:${PORT}/admin`);
+  console.log(` Panel de administración ejecutándose en:`);
+  console.log(` Local: http://localhost:${PORT}/admin`);
+  console.log(` Credenciales: ${process.env.ADMIN_EMAIL}`);
 });
+
+export default adminJs;
