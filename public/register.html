@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Inter', Arial, sans-serif;
-            background: linear-gradient(135deg, #FAEBDD 0%, #E4B1B1 100%);
+            background: linear-gradient(135deg, #E8B4B4 0%, #8B4A47 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -23,90 +23,109 @@
         }
 
         .register-container {
-            background: #FAEBDD;
+            background: #F7E7D4;
             border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(76, 30, 30, 0.1);
+            box-shadow: 0 20px 40px rgba(76, 30, 30, 0.2);
             padding: 40px;
             width: 100%;
             max-width: 420px;
-            border: 2px solid #E4BB8D;
+            border: 1px solid rgba(228, 187, 141, 0.5);
         }
 
         .logo-container {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
 
         .logo-container img {
             height: 60px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .logo-container h1 {
             color: #4C1E1E;
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
             margin-bottom: 5px;
+            letter-spacing: 1px;
         }
 
         .logo-container p {
             color: #6A2A2A;
             font-size: 14px;
+            opacity: 0.9;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .form-group label {
             display: block;
             color: #4C1E1E;
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 8px;
             font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group label::before {
+            content: "* ";
+            color: #8B4A47;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #E4BB8D;
-            border-radius: 8px;
-            font-size: 14px;
-            background: #FAEBDD;
+            padding: 15px 18px;
+            border: 2px solid #D4A574;
+            border-radius: 12px;
+            font-size: 16px;
+            background: #F7E7D4;
             color: #4C1E1E;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input::placeholder,
+        .form-group select {
+            color: #8B4A47;
+            opacity: 0.7;
         }
 
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #6A2A2A;
-            box-shadow: 0 0 0 3px rgba(106, 42, 42, 0.1);
+            border-color: #8B4A47;
+            box-shadow: 0 0 0 3px rgba(139, 74, 71, 0.15);
+            background: #F9EBD8;
         }
 
         .register-btn {
             width: 100%;
             background: #4C1E1E;
-            color: #FAEBDD;
+            color: #F7E7D4;
             border: none;
-            padding: 14px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 12px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-bottom: 20px;
+            margin: 30px 0 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .register-btn:hover {
             background: #6A2A2A;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(76, 30, 30, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 30, 30, 0.4);
         }
 
         .register-btn:disabled {
-            background: #898A9A;
+            background: #999;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
@@ -118,32 +137,35 @@
         }
 
         .login-link a {
-            color: #6A2A2A;
+            color: #8B4A47;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
+            font-size: 14px;
         }
 
         .login-link a:hover {
             color: #4C1E1E;
+            text-decoration: underline;
         }
 
         .alert {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 25px;
             font-size: 14px;
+            font-weight: 500;
         }
 
         .alert-success {
-            background: #AEE5C8;
-            color: #3F8E67;
+            background: rgba(174, 229, 200, 0.9);
+            color: #2D5A41;
             border: 1px solid #6BBF8F;
         }
 
         .alert-error {
-            background: #FFA5B5;
-            color: #C82E49;
+            background: rgba(255, 165, 181, 0.9);
+            color: #A91B3B;
             border: 1px solid #DE405D;
         }
 
@@ -151,7 +173,7 @@
             display: inline-block;
             width: 16px;
             height: 16px;
-            border: 2px solid #FAEBDD;
+            border: 2px solid #F4E2D1;
             border-radius: 50%;
             border-top-color: transparent;
             animation: spin 1s linear infinite;
@@ -162,10 +184,28 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Select styling to match the design */
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D4A574' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+            padding-right: 45px;
+        }
+
+        .form-group select:focus {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B4A47' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+        }
+
         @media (max-width: 480px) {
             .register-container {
-                padding: 30px 20px;
+                padding: 30px 25px;
                 margin: 10px;
+            }
+            
+            .logo-container h1 {
+                font-size: 24px;
             }
         }
     </style>
@@ -173,8 +213,8 @@
 <body>
     <div class="register-container">
         <div class="logo-container">
-            <img src="/logo/bow_logo_Mesa de trabajo 1 copia.png" alt="Bow Beauty Logo">
-            <h1>Registro Admin</h1>
+            <img src="/logo/bow_icono_Mesa de trabajo 1 copia.png" alt="Bow Beauty Logo">
+            <h1>BOW BEAUTY ADMIN</h1>
             <p>Crear nueva cuenta de administrador</p>
         </div>
 
@@ -183,17 +223,17 @@
         <form id="registerForm">
             <div class="form-group">
                 <label for="name">Nombre Completo</label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="name" placeholder="Nombre Completo" required>
             </div>
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" placeholder="Email" required>
             </div>
 
             <div class="form-group">
-                <label for="password">Contraseña</label>
-                <input type="password" id="password" name="password" required minlength="6">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Password" required minlength="6">
             </div>
 
             <div class="form-group">
@@ -206,7 +246,7 @@
             </div>
 
             <button type="submit" class="register-btn" id="registerBtn">
-                Crear Cuenta
+                CREAR CUENTA
             </button>
         </form>
 
@@ -233,7 +273,7 @@
 
             // Show loading state
             btn.disabled = true;
-            btn.innerHTML = '<span class="loading"></span>Creando cuenta...';
+            btn.innerHTML = '<span class="loading"></span>CREANDO CUENTA...';
             
             try {
                 const response = await fetch('/api/register', {
@@ -259,7 +299,7 @@
                 console.error('Register error:', error);
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = 'Crear Cuenta';
+                btn.innerHTML = 'CREAR CUENTA';
             }
         });
 
