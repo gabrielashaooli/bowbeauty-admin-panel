@@ -37,7 +37,7 @@ mongoose.connect(process.env.MONGO_URI)
 // Componentes personalizados
 const componentLoader = new ComponentLoader();
 const MediaPreview = componentLoader.add('MediaPreview', path.join(__dirname, 'components/MediaPreview.jsx'));
-const WelcomeDashboard = AdminJS.bundle('./components/WelcomeDashboard.jsx');
+const WelcomeDashboard = AdminJS.bundle('./components/WelcomeDashboard');
 
 // --- RECURSOS DEL ADMIN  ---
 
@@ -460,7 +460,6 @@ dashboard: {
     withMadeWithLove: false,
     logo: '/logo/bow_logo_Mesa de trabajo 1 copia.png',
     favicon: '/logo/bow_icono_Mesa de trabajo 1 copia.png',
-    
     theme: {
       fonts: { 
         base: "'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" 
@@ -468,6 +467,8 @@ dashboard: {
     },
   },
   
+  version: { app: Date.now().toString() },
+
   resources: [
     usuarioResource, 
     reelResource, 
