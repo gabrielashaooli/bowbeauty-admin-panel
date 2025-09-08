@@ -25,6 +25,8 @@ const __dirname = dirname(__filename);
 
 // AdminJS setup
 AdminJS.registerAdapter(AdminJSMongoose);
+
+const app = express();
 app.set('trust proxy', 1);
 
 // Conexión MongoDB
@@ -475,8 +477,6 @@ dashboard: {
   ],
 });
 
-// --- EXPRESS APP ---
-const app = express();
 
 // Archivos estáticos
 app.use('/logo', express.static(path.join(__dirname, 'logo')));
