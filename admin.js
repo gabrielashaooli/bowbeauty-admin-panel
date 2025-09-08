@@ -25,6 +25,7 @@ const __dirname = dirname(__filename);
 
 // AdminJS setup
 AdminJS.registerAdapter(AdminJSMongoose);
+app.set('trust proxy', 1);
 
 // Conexión MongoDB
 mongoose.connect(process.env.MONGO_URI)
@@ -456,8 +457,8 @@ dashboard: {
   branding: {
     companyName: 'Bow Beauty Admin',
     withMadeWithLove: false,
-    logo: 'http://localhost:3001/logo/bow_logo_Mesa de trabajo 1 copia.png',
-    favicon: 'http://localhost:3001/logo/bow_icono_Mesa de trabajo 1 copia.png',
+    logo: '/logo/bow_logo_Mesa de trabajo 1 copia.png',
+    favicon: '/logo/bow_icono_Mesa de trabajo 1 copia.png',
     
     theme: {
       fonts: { 
@@ -482,31 +483,32 @@ app.use('/logo', express.static(path.join(__dirname, 'logo')));
 app.use('/admin-assets', express.static(path.join(__dirname, 'admin-assets')));
 
 // Autenticación
-const router = AdminJSExpress.buildAuthenticatedRouter(adminJs, {
-  authenticate: async (email, password) => {
-    try {
+const router = AdminJSExpress.buildAuthenticatedRouter(
+  adminJs,
+  {
+    authenticate: async (email, password) => {
       const user = await AdminUser.findOne({ email, isActive: true }).select('+password');
       if (!user) return null;
+      if (!(await user.comparePassword(password))) return null;
 
-      const ok = await user.comparePassword(password);
-      if (!ok) return null;
-
+      // Por ahora solo admin (super_admin lo activamos después)
       if (!['admin'].includes(user.role)) return null;
 
-      // payload de sesión
-      return {
-        email: user.email,
-        role: user.role,
-        name: user.name,
-        id: String(user._id),
-      };
-    } catch (e) {
-      console.error('Auth error:', e);
-      return null;
-    }
+      return { email: user.email, role: user.role, name: user.name, id: String(user._id) };
+    },
+    cookiePassword: process.env.COOKIE_SECRET,
   },
-  cookiePassword: process.env.COOKIE_SECRET,
-});
+  null,
+  {
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    },
+  }
+);
 
 app.use(adminJs.options.rootPath, router);
 

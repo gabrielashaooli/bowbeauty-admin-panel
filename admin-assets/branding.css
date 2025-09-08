@@ -59,7 +59,7 @@ form[action="/admin/login"]::before {
   width: 80px !important;
   height: 80px !important;
   margin: 0 auto 24px !important;
-  background: url('http://localhost:3001/logo/bow_icono_Mesa de trabajo 1 copia.png') center/contain no-repeat !important;
+  background: url('logo/bow_icono_Mesa de trabajo 1 copia.png') center/contain no-repeat !important;
   border-radius: 50% !important;
   padding: 12px !important;
   box-sizing: border-box !important;
