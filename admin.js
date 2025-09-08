@@ -37,7 +37,7 @@ mongoose.connect(process.env.MONGO_URI)
 // Componentes personalizados
 const componentLoader = new ComponentLoader();
 const MediaPreview = componentLoader.add('MediaPreview', path.join(__dirname, 'components/MediaPreview.jsx'));
-const WelcomeDashboard = componentLoader.add('WelcomeDashboard', path.join(__dirname, 'components/WelcomeDashboard.jsx'));
+const WelcomeDashboard = AdminJS.bundle('./components/WelcomeDashboard.jsx');
 
 // --- RECURSOS DEL ADMIN  ---
 
@@ -244,7 +244,6 @@ const passwordResetResource = {
 const adminJs = new AdminJS({
   componentLoader,
   rootPath: '/admin',
-  // Actualización para el handler del dashboard en admin.js
 dashboard: {
   component: WelcomeDashboard,
   handler: async (req, res, context) => {
