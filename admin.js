@@ -37,9 +37,9 @@ mongoose.connect(process.env.MONGO_URI)
 // Componentes personalizados
 const componentLoader = new ComponentLoader();
 const MediaPreview = componentLoader.add('MediaPreview', path.join(__dirname, 'components/MediaPreview.jsx'));
-const WelcomeDashboard = componentLoader.add(
-  'WelcomeDashboard',
-  path.join(__dirname, 'components/WelcomeDashboard.jsx')
+const BBWelcome = componentLoader.add(
+  'BBWelcome',
+  path.join(__dirname, 'components/BBWelcome.jsx')
 );
 // --- RECURSOS DEL ADMIN  ---
 
@@ -247,7 +247,7 @@ const adminJs = new AdminJS({
   componentLoader,
   rootPath: '/admin',
 dashboard: {
-  component: WelcomeDashboard,
+  component: BBWelcome,
   handler: async (req, res, context) => {
     try {
       // Estadísticas principales
