@@ -38,8 +38,8 @@ mongoose.connect(process.env.MONGO_URI)
 const componentLoader = new ComponentLoader();
 const MediaPreview = componentLoader.add('MediaPreview', path.join(__dirname, 'components/MediaPreview.jsx'));
 const BBWelcome = componentLoader.add(
-  'BBWelcome',
-  path.join(__dirname, 'components/BBWelcome.jsx')
+   'BB_WELCOME_V1',                                 
+   path.resolve(__dirname, 'components', 'BBWelcome.jsx')
 );
 // --- RECURSOS DEL ADMIN  ---
 
