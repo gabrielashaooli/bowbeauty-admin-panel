@@ -20,3 +20,5 @@ Thumbs.db
 # Output
 dist/
 build/
+
+.adminjs
