@@ -247,6 +247,7 @@ const passwordResetResource = {
 const adminJs = new AdminJS({
   componentLoader,
   rootPath: '/admin',
+  assetsCDN: '/admin/frontend/assets/',
 dashboard: {
   component: BBWelcome,
   handler: async (req, res, context) => {
@@ -482,9 +483,21 @@ dashboard: {
 
 await adminJs.initialize(); 
 
-// Archivos estáticos
+// Archivos estáticos - DEBEN ir ANTES de la autenticación
 app.use('/logo', express.static(path.join(__dirname, 'logo')));
 app.use('/admin-assets', express.static(path.join(__dirname, 'admin-assets')));
+
+// Servir assets de AdminJS ANTES de la autenticación
+// Esto es crucial para evitar el error de MIME type
+app.use('/admin/frontend/assets', express.static(path.join(__dirname, 'node_modules/adminjs/lib/frontend/assets'), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    } else if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+  }
+}));
 
 // Autenticación
 const router = AdminJSExpress.buildAuthenticatedRouter(
@@ -514,6 +527,7 @@ const router = AdminJSExpress.buildAuthenticatedRouter(
   }
 );
 
+// Mount AdminJS router - AdminJS maneja sus propios assets
 app.use(adminJs.options.rootPath, router);
 
 // Middleware for API routes
