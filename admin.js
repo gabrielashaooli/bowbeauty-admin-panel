@@ -10,6 +10,7 @@ import * as AdminJSMongoose from '@adminjs/mongoose';
 import { ComponentLoader } from 'adminjs';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import '@adminjs/bundler';
 
 // Modelos
 import Usuario from './models/Usuario.js';
@@ -511,13 +512,6 @@ const router = AdminJSExpress.buildAuthenticatedRouter(
     },
   }
 );
-
-const ADMIN_ASSETS_DIR = path.join(__dirname, '.adminjs');
-app.use(`${adminJs.options.rootPath}/frontend/assets`, express.static(ADMIN_ASSETS_DIR));
-app.get(`${adminJs.options.rootPath}/frontend/assets/components.bundle.js`, (req, res) => {
-  res.sendFile(path.join(ADMIN_ASSETS_DIR, 'bundle.js'));
-});
-
 
 app.use(adminJs.options.rootPath, router);
 
