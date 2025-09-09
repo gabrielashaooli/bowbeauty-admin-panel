@@ -480,6 +480,7 @@ dashboard: {
   ],
 });
 
+await adminJs.initialize(); 
 
 // Archivos estáticos
 app.use('/logo', express.static(path.join(__dirname, 'logo')));
